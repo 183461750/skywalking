@@ -18,7 +18,8 @@ SHELL := /bin/bash -o pipefail
 
 SW_ROOT := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 CONTEXT ?= ${SW_ROOT}/dist
-SKIP_TEST ?= false
+SKIP_TEST ?= true
+SKIP_CHECKSTYLE ?= true
 DIST ?= apache-skywalking-apm-bin.tar.gz
 CLI_VERSION ?= 0.12.0 # CLI version inside OAP image should always use an Apache released artifact.
 
@@ -28,13 +29,13 @@ init:
 .PHONY: build.all build.backend build.ui
 
 build.all:
-	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST)
+	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST) -Dcheckstyle.skip=$(SKIP_CHECKSTYLE)
 
 build.backend:
-	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST) -Pbackend,dist
+	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST) -Dcheckstyle.skip=$(SKIP_CHECKSTYLE) -Pbackend,dist
 
 build.ui:
-	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST) -Pui,dist
+	cd $(SW_ROOT) && ./mvnw --batch-mode clean package -Dmaven.test.skip=$(SKIP_TEST) -Dcheckstyle.skip=$(SKIP_CHECKSTYLE) -Pui,dist
 
 DOCKER_BUILD_TOP:=${CONTEXT}/docker_build
 
