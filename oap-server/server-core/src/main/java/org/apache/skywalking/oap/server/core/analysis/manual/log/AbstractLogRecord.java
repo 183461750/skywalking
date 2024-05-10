@@ -19,6 +19,8 @@
 package org.apache.skywalking.oap.server.core.analysis.manual.log;
 
 import java.util.List;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.skywalking.oap.server.core.UnexpectedException;
@@ -135,6 +137,14 @@ public abstract class AbstractLogRecord extends Record {
             converter.accept(TIMESTAMP, record.getTimestamp());
             converter.accept(TAGS_RAW_DATA, record.getTagsRawData());
             converter.accept(TAGS, record.getTagsInString());
+
+            String[] split = record.getContent().split(" #end ");
+            if (split.length > 0) {
+                record.setContent(split[1]);
+                Map<String, String> field = LogStrUtil.parseAllBy(split[0]);
+                field.forEach(converter::accept);
+            }
+
         }
     }
 }
