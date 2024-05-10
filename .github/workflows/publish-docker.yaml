@@ -29,7 +29,7 @@ env:
 
 jobs:
   build:
-    if: github.repository == 'apache/skywalking'
+    if: github.repository == '183461750/skywalking'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -49,7 +49,7 @@ jobs:
       - name: Set environment variables
         run: |
           if [[ ${{ github.event_name }} == "release" ]]; then
-            echo "HUB=apache" >> $GITHUB_ENV
+            echo "HUB=183461750" >> $GITHUB_ENV
             echo "DOCKER_REGISTRY=docker.io" >> $GITHUB_ENV
             echo "DOCKER_USERNAME=${{ secrets.DOCKERHUB_USER }}" >> $GITHUB_ENV
             echo "DOCKER_PASSWORD=${{ secrets.DOCKERHUB_TOKEN }}" >> $GITHUB_ENV
@@ -58,8 +58,8 @@ jobs:
             TAG=${{ github.event.release.tag_name }}
             echo "TAG=${TAG#v}" >> $GITHUB_ENV
           else
-            echo "HUB=ghcr.io/apache/skywalking" >> $GITHUB_ENV
-            echo "DOCKER_REGISTRY=ghcr.io/apache/skywalking" >> $GITHUB_ENV
+            echo "HUB=ghcr.io/183461750/skywalking" >> $GITHUB_ENV
+            echo "DOCKER_REGISTRY=ghcr.io/183461750/skywalking" >> $GITHUB_ENV
             echo "DOCKER_USERNAME=${{ github.actor }}" >> $GITHUB_ENV
             echo "DOCKER_PASSWORD=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
             echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
