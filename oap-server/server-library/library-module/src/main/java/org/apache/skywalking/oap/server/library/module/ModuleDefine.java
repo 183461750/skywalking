@@ -125,7 +125,11 @@ public abstract class ModuleDefine implements ModuleProviderHolder {
             try {
                 Field field = getDeclaredField(destClass, propertyName);
                 field.setAccessible(true);
-                field.set(dest, src.get(propertyName));
+                Object value = src.get(propertyName);
+                if (propertyName.equals("password")) {
+                    value = value.toString();
+                }
+                field.set(dest, value);
             } catch (NoSuchFieldException e) {
                 LOGGER.warn(
                     propertyName + " setting is not supported in " + providerName + " provider of " + moduleName + " module");

@@ -35,6 +35,7 @@ import org.apache.skywalking.oap.server.core.storage.type.Convert2Storage;
 import org.apache.skywalking.oap.server.core.storage.type.StorageBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractLogRecord extends Record {
     public static final String ADDITIONAL_TAG_TABLE = "log_tag";
@@ -138,6 +139,20 @@ public abstract class AbstractLogRecord extends Record {
             converter.accept(TIMESTAMP, record.getTimestamp());
             converter.accept(TAGS_RAW_DATA, record.getTagsRawData());
             converter.accept(TAGS, record.getTagsInString());
+
+
+            String[] split = record.getContent().getText().split(" #end ");
+            if (split.length > 0) {
+                record.getContent().setText(split[1]);
+                Map<String, String> field = LogStrUtil.parseAllBy(split[0]);
+                field.forEach(converter::accept);
+            }
+
+//            record.getTagsInString().stream().map(tag -> tag.split("=")).forEach(
+//                    split -> converter.accept(split[0], split[1])
+//            );
         }
     }
+
 }
+
